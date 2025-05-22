@@ -1,0 +1,12 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  {% for shopping_cart in shopping_cart_list %}
+    {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
+      <div class="post-entry">
+        <p>{{ shopping_cart.product.name }} X{{ shopping_cart.quantity }}</p>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endblock content %}

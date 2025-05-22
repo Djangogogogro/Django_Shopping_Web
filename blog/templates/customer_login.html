@@ -2,10 +2,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-
-  <h1>NEW CUSTOMER!!</h1>
-  <a href="{% url 'New User' model_type='seller' %}">I want to be SELLER!!</a>
-
+  <h1>Login</h1>
   <form action="" method="post">
     {% csrf_token %}
     {{ form }}

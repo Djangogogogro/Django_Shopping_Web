@@ -1,1 +1,1 @@
-Django_Shopping_Web
+屌屌的God電商平台

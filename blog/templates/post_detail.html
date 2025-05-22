@@ -3,11 +3,13 @@
 
 {% block content %}
   <div class="post-entry">
-    <h2>{{ post.title }}</h2>
-    <p>{{ post.body }}</p>
+    <h2>{{ product.name }}</h2>
+    <p>${{ product.price }} NTD</p>
+    <p>remins {{ product.quantity }}</p>
   </div>
-  <div>
-    <p><a href="{% url 'post_edit' post.pk %}">+ Edit Blog Post</a></p>
-    <p><a href="{% url 'post_delete' post.pk %}">+ Delete Blog Post</a></p>
-  </div>
+  <form method="post" action="{% url 'Add To Cart' object.pk %}">
+    {% csrf_token %}
+    <input type="number" name="quantity" value="1" min="1">
+    <button type="submit">Add To Shopping Cart</button>
+  </form>
 {% endblock content %}

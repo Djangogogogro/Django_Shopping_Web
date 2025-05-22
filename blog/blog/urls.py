@@ -1,17 +1,21 @@
 # blog/urls.py
 from django.urls import path
 from .views import (
-    BlogListView,
-    BlogDetailView,
-    BlogCreateView,
-    BlogUpdateView,
-    BlogDeleteView,
+    HomeView,
+    Product_View,
+    Register_View,
+    Customer_Login_View,
+    logout_view,
+    Add_To_Cart_View,
+    Shopping_Cart_View
 )
 
 urlpatterns = [
-    path("", BlogListView.as_view(), name="home"),
-    path("post/new/", BlogCreateView.as_view(), name="post_new"),
-    path("post/<int:pk>/", BlogDetailView.as_view(), name="post_detail"),
-    path("post/<int:pk>/edit/", BlogUpdateView.as_view(), name="post_edit"),
-    path("post/<int:pk>/delete/", BlogDeleteView.as_view(), name="post_delete"),
+    path("", HomeView.as_view(), name="home"),
+    path("product/<int:pk>/", Product_View.as_view(), name="Product Detail"),
+    path("user/new/<str:model_type>", Register_View.as_view(), name="New User"),
+    path("user/login/", Customer_Login_View.as_view(), name="Login"),
+    path('logout/', logout_view, name='logout'),
+    path('product/<int:pk>/add/', Add_To_Cart_View.as_view(), name='Add To Cart'),
+    path('ShoppingCart', Shopping_Cart_View.as_view(), name='Shopping Cart'),
 ]
