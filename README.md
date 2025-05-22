@@ -1,1 +1,1 @@
-# Django-assignments-3
+Django_Shopping_Web
