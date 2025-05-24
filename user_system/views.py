@@ -32,6 +32,11 @@ class Register_View(CreateView):
         self.model = self.get_model_class()
         return super().dispatch(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_type'] = self.kwargs.get('model_type')
+        return context
+
     def form_valid(self, form):
         model = self.get_model_class()
         count = model.objects.count() + 1
