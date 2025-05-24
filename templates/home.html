@@ -1,0 +1,11 @@
+<!-- templates/home.html -->
+{% extends "base.html" %}
+
+{% block content %}
+  {% for product in product_list %}
+    <div class="post-entry">
+      <h2><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h2>
+      <p>${{ product.price }} NTD</p>
+    </div>
+  {% endfor %}
+{% endblock content %}
