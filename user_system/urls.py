@@ -1,17 +1,21 @@
 # blog/urls.py
 from django.urls import path
-from .views import (
+from user_system.views import (
     Register_View,
-    Customer_Login_View,
+    Login_View,
     logout_view,
     Add_To_Cart_View,
-    Shopping_Cart_View
+    Shopping_Cart_View,
+    My_Products_View,
+    Add_Products,
 )
 
 urlpatterns = [
     path("new/<str:model_type>", Register_View.as_view(), name="New User"),
-    path("login/", Customer_Login_View.as_view(), name="Login"),
+    path("login/<str:model_type>", Login_View.as_view(), name="Login"),
     path('logout/', logout_view, name='logout'),
     path('product/<int:pk>/add/', Add_To_Cart_View.as_view(), name='Add To Cart'),
     path('ShoppingCart', Shopping_Cart_View.as_view(), name='Shopping Cart'),
+    path('MyProducts', My_Products_View.as_view(), name='My Products'),
+    path('MyProducts/add', Add_Products.as_view(), name='Add Products'),
 ]

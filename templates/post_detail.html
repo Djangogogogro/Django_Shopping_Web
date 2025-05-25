@@ -5,7 +5,7 @@
   <div class="post-entry">
     <h2>{{ product.name }}</h2>
     <p>${{ product.price }} NTD</p>
-    <p>remins {{ product.quantity }}</p>
+    <p>remains {{ product.quantity }}</p>
   </div>
   <form method="post" action="{% url 'Add To Cart' object.pk %}">
     {% csrf_token %}

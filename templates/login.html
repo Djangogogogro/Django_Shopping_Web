@@ -1,0 +1,19 @@
+<!-- templates/post_new.html -->
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if model_type == 'customer' %}
+    <h1>CUSTOMER Login</h1>
+    <a href="{% url 'Login' model_type='seller' %}">I am a SELLER</a>
+  {% else %}
+    <h1>SELLER Login</h1>
+    <a href="{% url 'Login' model_type='customer' %}">I am a CUSTOMER</a>
+  {% endif %}
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Done">
+  </form>
+{% endblock content %}

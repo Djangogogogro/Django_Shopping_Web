@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  <a href="{% url 'Add Products' %}">Add New Products</a>
+
+  {% if products %}
+    {% for product in products %}
+      <div class="post-entry">
+        <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }}</p>
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No products found.</p>
+  {% endif %}
+
+{% endblock content %}

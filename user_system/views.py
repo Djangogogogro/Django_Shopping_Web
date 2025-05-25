@@ -20,10 +20,10 @@ class Register_View(CreateView):
     success_url = reverse_lazy('home')
 
     def get_model_class(self):
-        model_type = self.kwargs.get('model_type')
-        if model_type == 'customer':
+        self.model_type = self.kwargs.get('model_type')
+        if self.model_type == 'customer':
             return Customer
-        elif model_type == 'seller':
+        elif self.model_type == 'seller':
             return Seller
         else:
             raise ValueError("Invalid model type")
@@ -40,23 +40,38 @@ class Register_View(CreateView):
     def form_valid(self, form):
         model = self.get_model_class()
         count = model.objects.count() + 1
-        form.instance.user_ID = count
+        form.instance.user_ID = f'{(self.model_type[0]).upper()}{str(count)}'
 
         form.instance.user_password = make_password(form.instance.user_password)
 
         return super().form_valid(form)
     
-class Customer_Login_View(FormView):
-    template_name = 'customer_login.html'
+class Login_View(FormView):
+    template_name = 'login.html'
     form_class = CustomerLoginForm
     success_url = reverse_lazy('home')
+
+    def get_model_class(self):
+        self.model_type = self.kwargs.get('model_type')
+        if self.model_type == 'customer':
+            return Customer
+        elif self.model_type == 'seller':
+            return Seller
+        else:
+            raise ValueError("Invalid model type")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['model_type'] = self.kwargs.get('model_type')
+        return context
 
     def form_valid(self, form):
         email = form.cleaned_data['user_mail']
         password = form.cleaned_data['user_password']
+        model = self.get_model_class()
 
         try:
-            customer = Customer.objects.get(user_mail=email)
+            customer = model.objects.get(user_mail=email)
             if check_password(password, customer.user_password):
                 self.request.session['user_ID'] = customer.user_ID
                 self.request.session['user_name'] = customer.user_name
@@ -65,7 +80,7 @@ class Customer_Login_View(FormView):
             else:
                 form.add_error(None, "password error")
                 return self.form_invalid(form)
-        except Customer.DoesNotExist:
+        except model.DoesNotExist:
             form.add_error('user_mail', "帳號不存在")
             return self.form_invalid(form)
 
@@ -98,3 +113,40 @@ class Add_To_Cart_View(View):
 
         return redirect('home')
 
+class My_Products_View(ListView):
+    model = Product
+    template_name = "my_products.html"
+    context_object_name = "products"
+
+    def get_queryset(self):
+        user_id = self.request.session.get('user_ID')
+        if not user_id:
+            return redirect('Login')
+        try:
+            seller = Seller.objects.get(user_ID=user_id)
+            return seller.products.all()
+        except Seller.DoesNotExist:
+            return Product.objects.none()
+
+class Add_Products(CreateView):
+    model = Product
+    template_name = "add_products.html"
+    fields = ["name", "price", "quantity"]
+    success_url = reverse_lazy('home')
+
+    def form_valid(self, form):
+        current_user_id = self.request.session.get('user_ID')
+        if not current_user_id:
+            return redirect('Login')
+
+        response = super().form_valid(form)
+        count = Product.objects.count()
+        if form.cleaned_data['quantity'] != 0:
+            is_product_state = 'IS' #in stock
+        form.instance.product_ID = f'{is_product_state}_{str(count)}'
+        self.object.save()
+
+        seller = Seller.objects.get(user_ID = current_user_id)
+        seller.products.add(self.object)
+
+        return response

@@ -5,7 +5,7 @@ from blog.models import (
 )
 
 class User(models.Model):
-    user_ID = models.IntegerField()
+    user_ID = models.CharField(max_length = 255)
     user_mail = models.CharField(max_length = 255)
     user_name = models.CharField(max_length = 255)
     user_password = models.CharField(max_length = 255) #Hash
