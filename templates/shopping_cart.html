@@ -2,9 +2,12 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for shopping_cart in shopping_cart_list %}
+  {% for shopping_cart in cart_items %}
     {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
       <p>{{ shopping_cart.product.name }} - ${{ shopping_cart.product.price }} - x{{ shopping_cart.quantity }}</p>
     {% endif %}
   {% endfor %}
+
+  Total: ${{ total }} | <input type="submit" value="Buy">
+
 {% endblock content %}

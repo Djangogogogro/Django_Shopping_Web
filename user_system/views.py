@@ -92,6 +92,17 @@ def logout_view(request):
 class Shopping_Cart_View(ListView):
     model = Shopping_Cart
     template_name = "shopping_cart.html"
+    context_object_name = "cart_items"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user_ID = self.request.session.get('user_ID')
+        total = 0
+        for item in context['cart_items']:
+            if item.user_ID.user_ID == user_ID:
+                total += item.product.price * item.quantity
+        context['total'] = total
+        return context
 
 class Add_To_Cart_View(View):
     def post(self, request, pk):

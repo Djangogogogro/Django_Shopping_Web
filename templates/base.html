@@ -19,6 +19,7 @@
             </div>
             <div class="nav-right">
                 {% if request.session.user_ID %}
+                    <a href="{% url 'logout' %}">My Order</a> |
                     {% if 'C' in request.session.user_ID %}
                         <a href="{% url 'Shopping Cart' %}">Shopping Cart</a> |
                     {% else %}
