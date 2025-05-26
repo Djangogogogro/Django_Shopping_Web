@@ -14,7 +14,7 @@ class Customer(User):
     address = models.CharField(blank=True, max_length = 255)
 
 class Shopping_Cart(models.Model):
-    user_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, unique=True)
+    user_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField(default=1)
 
@@ -23,8 +23,8 @@ class Seller(User):
     rating = models.FloatField(default=0.0)
 
 class Order(models.Model):
-    order_ID = models.IntegerField()
-    products = models.ManyToManyField(Shopping_Cart, blank=True)
+    order_ID = models.CharField(max_length = 255)
+    products = models.ManyToManyField(Product, blank=True)
     customer_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True)
     seller_ID = models.ForeignKey(Seller, on_delete=models.CASCADE, blank=True)
     

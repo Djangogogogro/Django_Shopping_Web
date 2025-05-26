@@ -117,9 +117,6 @@ class Add_To_Cart_View(View):
 
         if quantity <= product.quantity:
 
-            product.quantity -= quantity
-            product.save()
-
             cart_item, created = Shopping_Cart.objects.get_or_create(
                 user_ID=customer,
                 product=product,
@@ -134,6 +131,36 @@ class Add_To_Cart_View(View):
 
 
         return redirect('Product Detail', pk=pk)
+    
+class Buy_View(View):
+    def post(self, request):
+        user_id = request.session.get('user_ID')
+        customer = get_object_or_404(Customer, user_ID = user_id)
+        shopping_carts = Shopping_Cart.objects.filter(user_ID=customer)
+
+        for cart in shopping_carts:
+            
+            if cart.quantity <= cart.product.quantity:
+                cart.product.quantity -= cart.quantity
+                cart.product.save()
+
+                seller = get_object_or_404(Seller, products = cart.product)
+                if not Order.objects.filter(seller_ID=seller).exists():
+                    Order.objects.create(
+                        order_ID = f'ESTD-{Order.objects.count()}',
+                        customer_ID = customer,
+                        seller_ID = seller,
+                    )
+                order = get_object_or_404(Order, seller_ID = seller)
+                product = get_object_or_404(Product, product_ID = cart.product.product_ID)
+                order.products.add(product)
+                cart.delete()
+            else:
+                messages.error(self.request, f"{cart.product.name} is NOT nough")
+            
+        
+        return redirect('Shopping Cart')
+
 
 class My_Products_View(ListView):
     model = Product

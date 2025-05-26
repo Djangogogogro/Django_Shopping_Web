@@ -3,7 +3,7 @@ from django.urls import reverse
 
 # Create your models here.
 class Product(models.Model):
-    product_ID = models.CharField(max_length = 255, blank=True, null=True, unique=True)
+    product_ID = models.CharField(max_length = 255, blank=True, null=True)
     name = models.CharField(max_length = 255)
     price = models.IntegerField()
     quantity = models.IntegerField()

@@ -2,12 +2,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% for shopping_cart in cart_items %}
-    {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
-      <p>{{ shopping_cart.product.name }} - ${{ shopping_cart.product.price }} - x{{ shopping_cart.quantity }}</p>
-    {% endif %}
-  {% endfor %}
 
-  Total: ${{ total }} | <input type="submit" value="Buy">
+  <form action="{% url 'Buy' %}" method="post">
+    {% csrf_token %}
+    {% for shopping_cart in cart_items %}
+      {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
+        <p>{{ shopping_cart.product.name }} - ${{ shopping_cart.product.price }} - x{{ shopping_cart.quantity }}</p>
+      {% endif %}
+    {% endfor %}
+
+    Total: ${{ total }} | <input type="submit" value="Buy">
+  </form>
+
+  {% if messages %}
+    {% for message in messages %}
+      <script>  
+          alert("{{ message|escapejs }}");
+      </script>
+    {% endfor %}
+  {% endif %}
 
 {% endblock content %}

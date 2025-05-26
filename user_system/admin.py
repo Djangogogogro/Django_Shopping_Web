@@ -55,7 +55,7 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
     def get_products(self, obj):
-        return "、".join([f"{p.name}, ${p.price}, X{p.quantity}" for p in obj.products.all()])
+        return "、".join([f"{p.name}, ${p.price}" for p in obj.products.all()])
     
     def get_customer_ID(self, obj):
         return (obj.customer_ID).user_ID
