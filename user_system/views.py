@@ -5,6 +5,7 @@ from django.views import View
 from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import redirect, get_object_or_404
 from user_system.forms import CustomerLoginForm
+from django.contrib import messages
 from django.urls import reverse_lazy
 from user_system.models import (
     Customer,
@@ -102,16 +103,26 @@ class Add_To_Cart_View(View):
         quantity = int(request.POST.get('quantity', 1))
         customer = get_object_or_404(Customer, user_ID=customer_id)
 
-        cart_item, created = Shopping_Cart.objects.get_or_create(
-            user_ID=customer,
-            product=product,
-            defaults={'quantity': quantity}
-        )
-        if not created:
-            cart_item.quantity += quantity
-            cart_item.save()
 
-        return redirect('home')
+        if quantity <= product.quantity:
+
+            product.quantity -= quantity
+            product.save()
+
+            cart_item, created = Shopping_Cart.objects.get_or_create(
+                user_ID=customer,
+                product=product,
+                defaults={'quantity': quantity}
+            )
+            if not created:
+                cart_item.quantity += quantity
+                cart_item.save()
+
+        else:
+            messages.error(self.request, "Not enough product")
+
+
+        return redirect('Product Detail', pk=pk)
 
 class My_Products_View(ListView):
     model = Product

@@ -12,4 +12,12 @@
     <input type="number" name="quantity" value="1" min="1">
     <button type="submit">Add To Shopping Cart</button>
   </form>
+
+  {% if messages %}
+    {% for message in messages %}
+      <script>  
+          alert("{{ message|escapejs }}");
+      </script>
+    {% endfor %}
+  {% endif %}
 {% endblock content %}

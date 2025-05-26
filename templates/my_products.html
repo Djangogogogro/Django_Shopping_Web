@@ -2,13 +2,13 @@
 
 {% block content %}
 
-  <a href="{% url 'Add Products' %}">Add New Products</a>
+  <div class="post-entry">
+    <a href="{% url 'Add Products' %}">Add New Products</a>
+  </div>
 
   {% if products %}
     {% for product in products %}
-      <div class="post-entry">
-        <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }}</p>
-      </div>
+      <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }}</p>
     {% endfor %}
   {% else %}
     <p>No products found.</p>

@@ -14,7 +14,7 @@ class Customer(User):
     address = models.CharField(blank=True, max_length = 255)
 
 class Shopping_Cart(models.Model):
-    user_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True)
+    user_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, null=True, unique=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, blank=True, null=True)
     quantity = models.IntegerField(default=1)
 
