@@ -138,27 +138,31 @@ class Buy_View(View):
         customer = get_object_or_404(Customer, user_ID = user_id)
         shopping_carts = Shopping_Cart.objects.filter(user_ID=customer)
 
+        order_seller_is_available = []
         for cart in shopping_carts:
-            
             if cart.quantity <= cart.product.quantity:
                 cart.product.quantity -= cart.quantity
                 cart.product.save()
 
                 seller = get_object_or_404(Seller, products = cart.product)
-                if not Order.objects.filter(seller_ID=seller).exists():
+                if not (seller.user_ID in order_seller_is_available):
                     Order.objects.create(
                         order_ID = f'ESTD-{Order.objects.count()}',
                         customer_ID = customer,
                         seller_ID = seller,
                     )
-                order = get_object_or_404(Order, seller_ID = seller)
-                product = get_object_or_404(Product, product_ID = cart.product.product_ID)
-                order.products.add(product)
-                cart.delete()
+                    order_seller_is_available.append(seller.user_ID)
             else:
                 messages.error(self.request, f"{cart.product.name} is NOT nough")
-            
-        
+
+        for cart in shopping_carts:
+            seller = get_object_or_404(Seller, products = cart.product)
+            order = Order.objects.filter(seller_ID=seller).order_by('-id').first()
+            order.products += f'{cart.product.product_ID}|{cart.product.price}|{cart.quantity},'
+            order.save()
+            cart.delete()
+            print(order.products)
+               
         return redirect('Shopping Cart')
 
 

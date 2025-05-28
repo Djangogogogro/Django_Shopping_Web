@@ -24,7 +24,8 @@ class Seller(User):
 
 class Order(models.Model):
     order_ID = models.CharField(max_length = 255)
-    products = models.ManyToManyField(Product, blank=True)
+    products = models.CharField(max_length = 1024, blank=True)
     customer_ID = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True)
     seller_ID = models.ForeignKey(Seller, on_delete=models.CASCADE, blank=True)
+    date = models.DateField(null=True, blank=True, auto_now_add=True)
     

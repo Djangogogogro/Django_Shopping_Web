@@ -49,13 +49,11 @@ class ShoppingCartAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'order_ID',
-        'get_products',
+        'products',
         'get_customer_ID',
-        'get_seller_ID'
+        'get_seller_ID',
+        'date'
     )
-
-    def get_products(self, obj):
-        return "、".join([f"{p.name}, ${p.price}" for p in obj.products.all()])
     
     def get_customer_ID(self, obj):
         return (obj.customer_ID).user_ID
@@ -63,7 +61,6 @@ class OrderAdmin(admin.ModelAdmin):
     def get_seller_ID(self, obj):
         return (obj.seller_ID).user_ID
     
-    get_products.short_description = 'Products'
     get_customer_ID.short_description = 'Customer_ID' 
     get_seller_ID.short_description = 'Seller_ID'    
 
