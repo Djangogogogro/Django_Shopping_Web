@@ -10,7 +10,8 @@ from datetime import timedelta
 from django.utils import timezone
 
 from user_system.models import (
-    Order
+    Order,
+    Seller
 )
 from blog.models import (
     Product
@@ -63,9 +64,10 @@ class Order_Manager(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user_ID = self.request.session.get('user_ID')  # 或用 self.request.user.user_ID
+        user_ID = self.request.session.get('user_ID')
+        selected_product_id = self.request.GET.get("product_ID")
 
-        # ========== 1. 商品銷量統計（只統計此賣家） ==========
+        # ========== 銷量統計 ==========
         product_sales = defaultdict(int)
         seller_orders = Order.objects.filter(seller_ID__user_ID=user_ID)
 
@@ -79,7 +81,7 @@ class Order_Manager(ListView):
         context['product_labels'] = list(product_sales.keys())
         context['product_data'] = list(product_sales.values())
 
-        # ========== 2. 每日銷售額統計（僅此賣家） ==========
+        # ========== 銷售額統計 ==========
         days = int(self.request.GET.get("days", 5))
         end_date = timezone.now().date()
         start_date = end_date - timedelta(days=days - 1)
@@ -100,5 +102,26 @@ class Order_Manager(ListView):
         context["daily_labels"] = [d.strftime("%Y-%m-%d") for d in date_labels]
         context["daily_data"] = list(daily_sales.values())
         context["days"] = days
+
+        # ========== 單一商品每日銷量 ==========
+        product_choices = get_object_or_404(Seller, user_ID = user_ID).products.all()
+        single_daily_sales = {date: 0 for date in date_labels}
+
+        if selected_product_id:
+            for order in seller_orders_in_range:
+                total = 0
+                product_entries = order.products.split(',')[:-1]
+                for entry in product_entries:
+                    name, price, quantity = entry.split('|')
+                    if name == str(self.request.GET.get("product_ID", 0)):
+                        total += int(price) * int(quantity)
+                if order.date in single_daily_sales:
+                    single_daily_sales[order.date] += total
+
+        context["single_product_labels"] = [d.strftime("%Y-%m-%d") for d in date_labels]
+        context["single_product_data"] = list(single_daily_sales.values())
+        context["product_choices"] = product_choices
+        context["selected_product_id"] = selected_product_id or ""
+        
 
         return context
