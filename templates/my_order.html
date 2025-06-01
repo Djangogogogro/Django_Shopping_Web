@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  {% if 'S' in request.session.user_ID %}
+    <a href="{% url 'Order Manager' %}">Order Manager</a>
+  {% endif %}
+  {% for order in display_orders %}
+    {% for line in order.product_lines %}
+      <p>{{ line }}</p>
+    {% endfor %}
+    <p><strong>total: ${{ order.total }}</strong></p>
+    <p>{{ order.date|date:"F d, Y" }} - {{ order.name_line }}</p>
+    <br>
+  {% endfor %}
+{% endblock content %}

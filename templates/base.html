@@ -10,7 +10,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
         
         <!-- Local CSS -->
-        <link href="{% static 'css/base.css' %}" rel="stylesheet">        
+        <link href="{% static 'css/base.css' %}" rel="stylesheet">    
+
     </head>
     <body>
         <header>
@@ -19,7 +20,7 @@
             </div>
             <div class="nav-right">
                 {% if request.session.user_ID %}
-                    <a href="{% url 'logout' %}">My Order</a> |
+                    <a href="{% url 'My Order' %}">My Order</a> |
                     {% if 'C' in request.session.user_ID %}
                         <a href="{% url 'Shopping Cart' %}">Shopping Cart</a> |
                     {% else %}
@@ -33,7 +34,7 @@
                 {% endif %}
             </div>
         </header>
-        <div>
+        <div class="wrapper">
             {% block content %}
             {% endblock content %}
         </div>

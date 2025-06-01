@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Sales Dashboard</h2>
+
+<!-- ========== 表單：選擇幾天內 ========== -->
+<form method="get" style="margin-bottom: 20px;">
+  <label for="days">Show daily sales for the last:</label>
+  <input type="number" id="days" name="days" min="1" max="30" value="{{ days }}">
+  <span>days</span>
+  <button type="submit">Update</button>
+</form>
+
+<!-- ========== Canvas 區塊 ========== -->
+<div style="display: flex; flex-wrap: wrap; gap: 30px;">
+    <div style="flex: 1; min-width: 300px; max-width: 600px; height: 400px;">
+        <h3>📈 Daily Revenue</h3>
+        <canvas id="dailyChart"></canvas>
+    </div>
+    <div style="flex: 1; min-width: 300px; max-width: 600px; height: 400px;">
+        <h3>📊 Product Sales</h3>
+        <canvas id="productChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ========== Chart.js CDN ========== -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+
+<!-- ========== 每日銷售額圖表 ========== -->
+<script>
+  var dailyCtx = document.getElementById("dailyChart").getContext("2d");
+  new Chart(dailyCtx, {
+    type: "line",
+    data: {
+      labels: {{ daily_labels|safe }},
+      datasets: [{
+        label: "Daily Revenue",
+        data: {{ daily_data|safe }},
+        fill: false,
+        borderColor: "rgba(75, 192, 192, 1)",
+        backgroundColor: "rgba(75, 192, 192, 0.2)",
+        tension: 0.1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{ ticks: { beginAtZero: true } }]
+      }
+    }
+  });
+</script>
+
+<!-- ========== 商品銷量圖表 ========== -->
+<script>
+  var productCtx = document.getElementById("productChart").getContext("2d");
+  new Chart(productCtx, {
+    type: "bar",
+    data: {
+      labels: {{ product_labels|safe }},
+      datasets: [{
+        label: "Product Sales",
+        data: {{ product_data|safe }},
+        backgroundColor: "rgba(153, 102, 255, 0.5)",
+        borderColor: "rgba(153, 102, 255, 1)",
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        yAxes: [{ ticks: { beginAtZero: true, precision: 0 } }]
+      }
+    }
+  });
+</script>
+{% endblock content %}
