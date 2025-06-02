@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static %}
+
+<link rel='stylesheet' type='text/css' href="{% static 'css/detail.css' %}">
+
+{% block content %}
+<div id='content-wrapper'>
+    <div class='column'>
+        {% if product.images.first.image_path != ' ' %}
+            <img id=featured src="{% static 'products/'|add:product.images.first.image_path %}">
+        {% else %}
+            <img id=featured src="{{ product.images.first.image_file.url }}">
+        {% endif %}       
+        <div id="slide-wrapper">
+            <div id="slider">
+                {% for image in product.images.all %}
+                    {% if image.image_path != ' ' %}
+                        {% if image.image_path == product.images.first.image_path %}
+                            <img class="thumbnail active" src="{% static 'products/'|add:image.image_path %}">
+                        {% else %}
+                            <img class="thumbnail" src="{% static 'products/'|add:image.image_path %}">
+                        {% endif %}
+                    {% else %}
+                        {% if image.image_file == product.images.first.image_file %}
+                            <img class="thumbnail active" src="{{ image.image_file.url }}" alt="{{ product.name }}">
+                        {% else %}
+                            <img class="thumbnail" src="{{ image.image_file.url }}" alt="{{ product.name }}">
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class='column'>
+        <h1>{{ product.name }}</h1>
+        <hr><br>
+        <h2>Price: ${{ product.price }}</h2>
+        <br><br><br>
+        <p>{{ product.description|linebreaksbr }}</p>
+        <br>
+        <h1>quantity : {{ product.quantity}}</h1>
+        <section class='back-to-list'>
+            <br><a href="{% url 'product_list' %}">Back to list</a>
+        </section>
+
+        {% if 'C' in userID %}
+            <form method="post" action="{% url 'Add To Cart' product.id %}">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="1" min="1">
+                <button type="submit">Add To Shopping Cart</button>
+            </form>
+        {% endif %}
+
+    </div>
+</div>
+
+<script type='text/javascript'>
+    let thumbnails = document.getElementsByClassName('thumbnail')
+    let activeImages = document.getElementsByClassName('active')
+    for(var i=0; i<thumbnails.length;i++){
+        thumbnails[i].addEventListener('mouseover',function(){
+            if(activeImages.length > 0){
+                activeImages[0].classList.remove('active')
+            }
+            this.classList.add('active')
+            document.getElementById('featured').src = this.src
+        })
+    }
+</script>
+{% endblock content %}
+

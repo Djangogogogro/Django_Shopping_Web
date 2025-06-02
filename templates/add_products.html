@@ -1,12 +1,13 @@
-<!-- templates/post_new.html -->
 {% extends "base.html" %}
-
 {% block content %}
-
-  <form action="" method="post">
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Add">
-  </form>
-
+<div class="container center">
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="formFile" class="form-label"><h3>Upload Files Here</h3></label>
+            {{ form.as_p }}
+        </div>
+        <button type="submit" class="btn btn-outline-primary ">Submit</button>
+    </form>
+</div>
 {% endblock content %}

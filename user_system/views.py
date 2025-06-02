@@ -6,19 +6,23 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.shortcuts import redirect, get_object_or_404
 from user_system.forms import CustomerLoginForm
 from django.contrib import messages
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from user_system.models import (
     Customer,
     Seller,
     Shopping_Cart,
     Order,
-    Product
 )
+from showitem.models import (
+    Product,
+    ProductImage
+)
+from .forms import ProductFormWithImages
 
 class Register_View(CreateView):
-    template_name = "post_new.html"
+    template_name = "new.html"
     fields = ["user_name", "user_mail", "user_password"]
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('product_list')
 
     def get_model_class(self):
         self.model_type = self.kwargs.get('model_type')
@@ -40,17 +44,25 @@ class Register_View(CreateView):
 
     def form_valid(self, form):
         model = self.get_model_class()
-        count = model.objects.count() + 1
+        all_user = model.objects
+        count = all_user.count() + 1
+        
         form.instance.user_ID = f'{(self.model_type[0]).upper()}{str(count)}'
 
         form.instance.user_password = make_password(form.instance.user_password)
 
-        return super().form_valid(form)
+        try:
+            customer = model.objects.get(user_mail = form.instance.user_mail)
+            form.add_error(None, "帳號已存在")
+            return self.form_invalid(form)
+        except:
+            return super().form_valid(form)
+
     
 class Login_View(FormView):
     template_name = 'login.html'
     form_class = CustomerLoginForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('product_list')
 
     def get_model_class(self):
         self.model_type = self.kwargs.get('model_type')
@@ -87,7 +99,7 @@ class Login_View(FormView):
 
 def logout_view(request):
     request.session.flush()
-    return redirect('home')
+    return redirect('product_list')
 
 class Shopping_Cart_View(ListView):
     model = Shopping_Cart
@@ -108,7 +120,7 @@ class Add_To_Cart_View(View):
     def post(self, request, pk):
         customer_id = request.session.get('user_ID')
         if not customer_id:
-            return redirect('Login')
+            return redirect(reverse('Login', args=['customer']))
 
         product = get_object_or_404(Product, pk=pk)
         quantity = int(request.POST.get('quantity', 1))
@@ -130,7 +142,7 @@ class Add_To_Cart_View(View):
             messages.error(self.request, "Not enough product")
 
 
-        return redirect('Product Detail', pk=pk)
+        return redirect('product_list')
     
 class Buy_View(View):
     def post(self, request):
@@ -158,7 +170,7 @@ class Buy_View(View):
         for cart in shopping_carts:
             seller = get_object_or_404(Seller, products = cart.product)
             order = Order.objects.filter(seller_ID=seller).order_by('-id').first()
-            order.products += f'{cart.product.product_ID}|{cart.product.price}|{cart.quantity},'
+            order.products += f'{cart.product.name}|{cart.product.price}|{cart.quantity},'
             order.save()
             cart.delete()
             print(order.products)
@@ -184,22 +196,47 @@ class My_Products_View(ListView):
 class Add_Products(CreateView):
     model = Product
     template_name = "add_products.html"
-    fields = ["name", "price", "quantity"]
-    success_url = reverse_lazy('home')
+    form_class = ProductFormWithImages
+    success_url = reverse_lazy('product_list')
 
     def form_valid(self, form):
+        # 檢查用戶是否登入
         current_user_id = self.request.session.get('user_ID')
         if not current_user_id:
             return redirect('Login')
 
-        response = super().form_valid(form)
-        count = Product.objects.count()
-        if form.cleaned_data['quantity'] != 0:
-            is_product_state = 'IS' #in stock
-        form.instance.product_ID = f'{is_product_state}_{str(count)}'
-        self.object.save()
+        # 保存產品
+        product = form.save()
+        
+        # 設定 self.object 以避免錯誤
+        self.object = product
 
-        seller = Seller.objects.get(user_ID = current_user_id)
-        seller.products.add(self.object)
+        # 關聯賣家
+        try:
+            seller = Seller.objects.get(user_ID=current_user_id)
+            seller.products.add(product)
+        except Seller.DoesNotExist:
+            # 處理賣家不存在的情況
+            product.delete()  # 清理已創建的產品
+            return redirect('Login')
 
-        return response
+        # 處理圖片上傳
+        images = self.request.FILES.getlist('images')
+        for img in images:
+            ProductImage.objects.create(
+                product=product,
+                image_file=img,
+                image_path=' ',
+            )
+
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        return super().form_invalid(form)
+    
+class Edit_Product(UpdateView):
+    model = Product
+    template_name = "product_edit.html"
+    form_class = ProductFormWithImages
+    success_url = reverse_lazy('My Products')
+    

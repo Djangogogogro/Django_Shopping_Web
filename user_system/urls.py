@@ -1,4 +1,3 @@
-# blog/urls.py
 from django.urls import path
 from user_system.views import (
     Register_View,
@@ -9,6 +8,7 @@ from user_system.views import (
     My_Products_View,
     Add_Products,
     Buy_View,
+    Edit_Product,
 )
 
 urlpatterns = [
@@ -20,4 +20,5 @@ urlpatterns = [
     path('ShoppingCart/buy', Buy_View.as_view(), name='Buy'),
     path('MyProducts', My_Products_View.as_view(), name='My Products'),
     path('MyProducts/add', Add_Products.as_view(), name='Add Products'),
+    path('product/<int:pk>/edit', Edit_Product.as_view(), name='Edit Products'),
 ]

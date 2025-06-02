@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+  {% if model_type == 'customer' %}
+    <h1>NEW CUSTOMER!!</h1>
+    <a href="{% url 'New User' model_type='seller' %}">I want to be SELLER!!</a>
+  {% else %}
+    <h1>NEW SELLER!!</h1>
+    <a href="{% url 'New User' model_type='customer' %}">I want to be CUSTOMER!!</a>
+  {% endif %}
+
+  <form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Done">
+  </form>
+{% endblock content %}

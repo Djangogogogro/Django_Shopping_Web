@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from blog.models import (
+from showitem.models import (
     Product
 )
 
@@ -19,7 +19,7 @@ class Shopping_Cart(models.Model):
     quantity = models.IntegerField(default=1)
 
 class Seller(User):
-    products = models.ManyToManyField(Product, blank=True, null=True)
+    products = models.ManyToManyField(Product, blank=True)
     rating = models.FloatField(default=0.0)
 
 class Order(models.Model):

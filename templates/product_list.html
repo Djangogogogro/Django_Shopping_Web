@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Product List{% endblock title %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/list.css' %}">
+{% endblock extra_css %}
+
+{% block content %}
+<div id="product-container">
+    <div id="category-list">
+        {% for category in categories %}
+            <div class="category-tab" data-cat="{{ category.id }}"><h4>{{ category.name }}</h4></div>
+            <hr>
+        {% endfor %}
+    </div>
+    <div id='products'>
+    {% for cat_id, products in products_by_category.items %}
+        <div class="product-list" data-cat="{{ cat_id }}">
+            {% for product in products %}
+                <section class='item'>
+                    {% with img=product.images.first %}
+                        {% if img.image_path != ' ' %}
+                            <!-- 圖片來自 static -->
+                            <img src="{% static 'products/'|add:img.image_path %}" alt="{{ product.name }}">
+                        {% elif img.image_file %}
+                            <!-- 圖片來自 media -->
+                            <img src="{{ img.image_file.url }}" alt="{{ product.name }}">
+                        {% endif %}
+                    {% endwith %}
+                    <h3><a href="{% url 'product_detail' product.id %}">{{ product.name }}</a></h3>
+                    <h3>$ {{ product.price }}</h3>
+                </section>
+                {% empty %}
+                    <p>這個分類沒有商品。</p>
+            {% endfor %}
+        </div>
+    {% endfor %}
+    </div>
+</div>
+<script>
+const tabs = document.querySelectorAll('.category-tab');
+const lists = document.querySelectorAll('.product-list');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const catId = tab.getAttribute('data-cat');
+
+        // 切換 tab 樣式
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // 顯示對應商品
+        lists.forEach(list => {
+            list.classList.toggle('active', list.getAttribute('data-cat') === catId);
+        });
+    });
+});
+
+// 預設顯示第一個分類
+if (tabs.length > 0) {
+    tabs[0].click();
+}
+</script>
+{% endblock content %}

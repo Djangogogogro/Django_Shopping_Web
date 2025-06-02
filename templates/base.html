@@ -1,25 +1,19 @@
-<!-- templates/base.html -->
 {% load static %}
 <html>
     <head>
-        <title>God電</title>
-
-        <!-- Google Fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
-        
-        <!-- Local CSS -->
-        <link href="{% static 'css/base.css' %}" rel="stylesheet">        
+        <title>{% block title %}My Site{% endblock title %}</title>
+        <link rel="stylesheet" href="{% static 'css/base.css' %}">
+        <link rel='stylesheet' type='text/css' href="{% static 'css/detail.css' %}">
+        {% block extra_css %}{% endblock extra_css %}
     </head>
     <body>
         <header>
             <div class="nav-left">
-                <h1><a href="{% url 'home' %}">⚡God電</a></h1>
+                <h1><a href="{% url 'product_list' %}">🐜BUYIT</a></h1>
             </div>
             <div class="nav-right">
                 {% if request.session.user_ID %}
-                    <a href="{% url 'logout' %}">My Order</a> |
+                    <a href="{% url 'My Order' %}">My Order</a> |
                     {% if 'C' in request.session.user_ID %}
                         <a href="{% url 'Shopping Cart' %}">Shopping Cart</a> |
                     {% else %}

@@ -8,7 +8,7 @@
 
   {% if products %}
     {% for product in products %}
-      <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }}</p>
+      <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }} -- <a href="{% url 'Edit Products' product.pk %}">Edit</a></p>
     {% endfor %}
   {% else %}
     <p>No products found.</p>
