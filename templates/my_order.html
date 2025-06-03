@@ -9,7 +9,7 @@
 <div class="order-wrapper">
 
   {% if 'S' in request.session.user_ID or 'E' in request.session.user_ID %}
-    <a class="order-link" href="{% url 'Order Manager' %}">🛠️ Manage Orders</a>
+    <a class="order-link" href="{% url 'Order Manager' %}">🛠️ Sales Dashboard</a>
   {% endif %}
 
   {% for order in display_orders %}
