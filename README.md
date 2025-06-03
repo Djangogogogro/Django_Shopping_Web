@@ -4,6 +4,7 @@ EXAMPLE ACCOUNTS
 SELLER ACCOUNTS :  
 Email : ecommerce@example.com  
 Password : ecommerce  
+  
 CUSTOMER ACCOUNTS :  
 Email : a@gmail.com  
 Password : a
