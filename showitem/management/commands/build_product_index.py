@@ -17,7 +17,7 @@ class Command(BaseCommand):
             return
 
         # 1. 將產品資料轉為文字描述
-        texts = [f"{p.name} {p.description}" for p in products]
+        texts = [f"{p.name}" for p in products]
 
         # 2. 使用預訓練模型轉換為向量
         model = SentenceTransformer('all-MiniLM-L6-v2')

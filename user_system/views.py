@@ -7,6 +7,10 @@ from django.shortcuts import redirect, get_object_or_404
 from user_system.forms import CustomerLoginForm
 from django.contrib import messages
 from django.urls import reverse_lazy, reverse
+from sentence_transformers import SentenceTransformer
+import faiss
+import numpy as np
+import os
 from user_system.models import (
     Customer,
     Seller,
@@ -200,15 +204,11 @@ class Add_Products(CreateView):
     success_url = reverse_lazy('product_list')
 
     def form_valid(self, form):
-        # 檢查用戶是否登入
         current_user_id = self.request.session.get('user_ID')
         if not current_user_id:
             return redirect('Login')
 
-        # 保存產品
         product = form.save()
-        
-        # 設定 self.object 以避免錯誤
         self.object = product
 
         # 關聯賣家
@@ -216,11 +216,10 @@ class Add_Products(CreateView):
             seller = Seller.objects.get(user_ID=current_user_id)
             seller.products.add(product)
         except Seller.DoesNotExist:
-            # 處理賣家不存在的情況
-            product.delete()  # 清理已創建的產品
+            product.delete()
             return redirect('Login')
 
-        # 處理圖片上傳
+        # 上傳圖片
         images = self.request.FILES.getlist('images')
         for img in images:
             ProductImage.objects.create(
@@ -228,6 +227,34 @@ class Add_Products(CreateView):
                 image_file=img,
                 image_path=' ',
             )
+
+        # 🧠 向量化語意內容（語意搜尋使用）
+        try:
+            model = SentenceTransformer('all-MiniLM-L6-v2')
+            vector = model.encode([product.name])  # 可加其他欄位
+            vector = np.array(vector).astype('float32')
+
+            # 載入/建立向量索引
+            index_path = "vector_store/product_index.faiss"
+            id_path = "vector_store/product_ids.npy"
+            os.makedirs("vector_store", exist_ok=True)
+
+            if os.path.exists(index_path) and os.path.exists(id_path):
+                index = faiss.read_index(index_path)
+                id_array = np.load(id_path)
+            else:
+                index = faiss.IndexFlatL2(vector.shape[1])
+                id_array = np.array([], dtype=np.int32)
+
+            # 將向量新增進索引
+            index.add(vector)
+            id_array = np.append(id_array, product.id)
+
+            # 儲存索引與ID
+            faiss.write_index(index, index_path)
+            np.save(id_path, id_array)
+        except Exception as e:
+            print(f"[FAISS Error] 商品向量化失敗：{e}")
 
         return super().form_valid(form)
 

@@ -57,32 +57,33 @@ def product_list(request):
     query = request.GET.get('q', '')
     categories = Category.objects.all()
 
-    use_semantic = True  # 或根據參數區分語意 vs 關鍵字搜尋
+    use_semantic = True
     all_products = Product.objects.none()
 
     if query:
         if use_semantic:
-            # 語意搜尋
             try:
                 model = SentenceTransformer("all-MiniLM-L6-v2")
                 query_vector = model.encode([query])
                 index = faiss.read_index("vector_store/product_index.faiss")
                 product_ids = np.load("vector_store/product_ids.npy")
 
-                distances, indices = index.search(query_vector, k=5)
+                distances, indices = index.search(query_vector, k=12)
                 matched_ids = product_ids[indices[0]]
-                all_products = Product.objects.filter(id__in=matched_ids)
+
+                from django.db.models import Case, When
+                preserved_order = Case(*[
+                    When(id=int(pk), then=pos) for pos, pk in enumerate(matched_ids)
+                ])
+                all_products = Product.objects.filter(id__in=matched_ids).order_by(preserved_order)
             except Exception as e:
                 print(f"Semantic search error: {e}")
                 all_products = Product.objects.filter(name__icontains=query)
         else:
-            # 關鍵字搜尋
             all_products = Product.objects.filter(name__icontains=query)
     else:
-        # 沒有搜尋時顯示全部
         all_products = Product.objects.all()
 
-    # 類別資料
     products_by_category = {
         category.id: Product.objects.filter(category=category)
         for category in categories
