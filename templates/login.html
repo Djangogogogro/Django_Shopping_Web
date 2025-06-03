@@ -1,18 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock extra_css %}
 
 {% block content %}
+<div class="login-wrapper">
+  <div class="login-box">
+    {% if model_type == 'customer' %}
+      <h1>CUSTOMER Login</h1>
+      <a class="switch-link" href="{% url 'Login' model_type='seller' %}">🔄I am a SELLER</a>
+    {% else %}
+      <h1>SELLER Login</h1>
+      <a class="switch-link" href="{% url 'Login' model_type='customer' %}">🔄I am a CUSTOMER</a>
+    {% endif %}
 
-  {% if model_type == 'customer' %}
-    <h1>CUSTOMER Login</h1>
-    <a href="{% url 'Login' model_type='seller' %}">I am a SELLER</a>
-  {% else %}
-    <h1>SELLER Login</h1>
-    <a href="{% url 'Login' model_type='customer' %}">I am a CUSTOMER</a>
-  {% endif %}
-
-  <form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Done">
-  </form>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" class="submit-btn" value="Login">
+    </form>
+  </div>
+</div>
 {% endblock content %}

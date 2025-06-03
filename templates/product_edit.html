@@ -1,11 +1,23 @@
-<!-- templates/post_edit.html -->
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_product.css' %}">
+{% endblock %}
 
 {% block content %}
-  <h1>Edit Product</h1>
-  <form action="" method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" value="Update">
-  </form>
+<div class="form-wrapper">
+  <div class="form-card">
+    <h2 class="form-title">Edit Product</h2>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="form-fields">
+        {{ form.as_p }}
+      </div>
+
+      <button type="submit" class="btn btn-primary submit-btn">Update</button>
+    </form>
+  </div>
+</div>
 {% endblock content %}

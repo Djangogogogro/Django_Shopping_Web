@@ -39,9 +39,6 @@
         <p>{{ product.description|linebreaksbr }}</p>
         <br>
         <h1>quantity : {{ product.quantity}}</h1>
-        <section class='back-to-list'>
-            <br><a href="{% url 'product_list' %}">Back to list</a>
-        </section>
 
         {% if 'C' in userID %}
             <form method="post" action="{% url 'Add To Cart' product.id %}">
@@ -50,6 +47,10 @@
                 <button type="submit">Add To Shopping Cart</button>
             </form>
         {% endif %}
+
+        <section class='back-to-list'>
+            <br><a href="{% url 'product_list' %}">Back to list</a>
+        </section>
 
     </div>
 </div>

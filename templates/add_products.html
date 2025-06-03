@@ -1,13 +1,23 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/add_product.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container center">
+<div class="form-wrapper">
+  <div class="form-card">
+    <h2 class="form-title">Add New Product</h2>
+
     <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="mb-3">
-            <label for="formFile" class="form-label"><h3>Upload Files Here</h3></label>
-            {{ form.as_p }}
-        </div>
-        <button type="submit" class="btn btn-outline-primary ">Submit</button>
+      {% csrf_token %}
+      <div class="form-fields">
+        {{ form.as_p }}
+      </div>
+
+      <button type="submit" class="btn btn-primary submit-btn">Submit</button>
     </form>
+  </div>
 </div>
 {% endblock content %}

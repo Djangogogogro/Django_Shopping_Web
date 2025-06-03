@@ -7,23 +7,23 @@
         {% block extra_css %}{% endblock extra_css %}
     </head>
     <body>
-        <header>
+        <header style="background-color: #9bc7e0;">
             <div class="nav-left">
                 <h1><a href="{% url 'product_list' %}">🐜BUYIT</a></h1>
             </div>
             <div class="nav-right">
                 {% if request.session.user_ID %}
-                    <a href="{% url 'My Order' %}">My Order</a> |
+                    <h4><a href="{% url 'My Order' %}">My Order</a></h4>|
                     {% if 'C' in request.session.user_ID %}
-                        <a href="{% url 'Shopping Cart' %}">Shopping Cart</a> |
+                        <h4><a href="{% url 'Shopping Cart' %}">Shopping Cart</a></h4>|
                     {% else %}
-                        <a href="{% url 'My Products' %}">My Products</a> |
+                        <h4><a href="{% url 'My Products' %}">My Products</a></h4>|
                     {% endif %} 
-                    <span>{{ request.session.user_name }}</span> | 
-                    <a href="{% url 'logout' %}">Logout</a>
+                    <h4 style="color: rgb(98, 103, 136);">{{ request.session.user_name }}</h4>| 
+                    <h4><a href="{% url 'logout' %}">Logout</a></h4>
                 {% else %}
-                    <a href="{% url 'Login' model_type='customer' %}">Login</a> | 
-                    <a href="{% url 'New User' model_type='customer' %}">Sign up</a>
+                    <h4><a href="{% url 'Login' model_type='customer' %}">Login</a></h4>|
+                    <h4><a href="{% url 'New User' model_type='customer' %}">Sign up</a></h4>
                 {% endif %}
             </div>
         </header>

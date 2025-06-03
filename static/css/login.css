@@ -1,0 +1,54 @@
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+}
+
+.login-box {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    min-width: 300px;
+    max-width: 400px;
+    width: 100%;
+}
+
+.switch-link {
+    display: block;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    color: #666;
+    text-decoration: none;
+}
+.switch-link:hover {
+    color: #333;
+}
+
+.submit-btn {
+    background-color: #3b7ddd;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.submit-btn:hover {
+    background-color: #2f66c0;
+}
+
+form p {
+    margin-bottom: 15px;
+}
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="number"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

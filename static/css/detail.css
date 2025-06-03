@@ -14,15 +14,15 @@
 }
 #featured{
     width: 500px;
-    height: 600px;
+    height: 500px;
     object-fit: cover;
     cursor: pointer;
     border: 2px solid black;
 }
 .thumbnail{
     object-fit: cover;
-    max-width: 180px;
-    max-height: 100px;
+    width: 100px;
+    height: 80px;
     cursor: pointer;
     opacity: 0.5;
     margin: 5px;

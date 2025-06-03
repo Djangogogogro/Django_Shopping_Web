@@ -1,17 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/my_product.css' %}">
+{% endblock %}
 
 {% block content %}
+<div class="product-dashboard">
 
-  <div class="post-entry">
-    <a href="{% url 'Add Products' %}">Add New Products</a>
+  <div class="add-product">
+    <a class="add-button" href="{% url 'Add Products' %}">＋ Add New Product</a>
   </div>
 
   {% if products %}
-    {% for product in products %}
-      <p>{{ product.name }} - ${{ product.price }} - remains: {{ product.quantity }} -- <a href="{% url 'Edit Products' product.pk %}">Edit</a></p>
-    {% endfor %}
+    <div class="product-grid">
+      {% for product in products %}
+        <div class="product-card">
+          <h3>{{ product.name }}</h3>
+          <p><strong>Price:</strong> ${{ product.price }}</p>
+          <p><strong>Stock:</strong> {{ product.quantity }}</p>
+          <a href="{% url 'Edit Products' product.pk %}" class="edit-btn">✏️ Edit</a>
+        </div>
+      {% endfor %}
+    </div>
   {% else %}
     <p>No products found.</p>
   {% endif %}
 
+</div>
 {% endblock content %}

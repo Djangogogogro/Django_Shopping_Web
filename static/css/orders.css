@@ -1,0 +1,51 @@
+.order-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.order-link {
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #3366cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+.order-link:hover {
+  text-decoration: underline;
+}
+
+.order-card {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-left: 5px solid #5054d1;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.order-header {
+  margin-top: 0;
+  font-size: 1.3rem;
+  color: #333;
+}
+
+.order-name {
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.order-items {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-bottom: 15px;
+}
+
+.order-total {
+  font-weight: bold;
+  font-size: 1.1rem;
+  text-align: right;
+  color: #222;
+}

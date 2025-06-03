@@ -1,16 +1,35 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+{% endblock %}
 
 {% block content %}
+<div class="cart-wrapper">
+  <h1 class="cart-title">Shopping Cart</h1>
 
   <form action="{% url 'Buy' %}" method="post">
     {% csrf_token %}
-    {% for shopping_cart in cart_items %}
-      {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
-        <p>{{ shopping_cart.product.name }} - ${{ shopping_cart.product.price }} - x{{ shopping_cart.quantity }}</p>
-      {% endif %}
-    {% endfor %}
 
-    Total: ${{ total }} | <input type="submit" value="Buy">
+    <div class="cart-items">
+      {% for shopping_cart in cart_items %}
+        {% if request.session.user_ID == shopping_cart.user_ID.user_ID %}
+          <div class="cart-item">
+            <div class="item-name">{{ shopping_cart.product.name }}</div>
+            <div class="item-price">$ {{ shopping_cart.product.price }}</div>
+            <div class="item-qty">x{{ shopping_cart.quantity }}</div>
+          </div>
+        {% endif %}
+      {% empty %}
+        <p>No items in your cart.</p>
+      {% endfor %}
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total">Total: ${{ total }}</div>
+      <button type="submit" class="buy-btn">Buy</button>
+    </div>
   </form>
 
   {% if messages %}
@@ -20,5 +39,5 @@
       </script>
     {% endfor %}
   {% endif %}
-
+</div>
 {% endblock content %}

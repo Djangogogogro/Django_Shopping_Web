@@ -1,0 +1,66 @@
+.dashboard-title {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 32px;
+  color: #333;
+}
+
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  padding: 20px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  width: 100%;
+  max-width: 550px;
+  min-height: 480px;
+  box-sizing: border-box;
+}
+
+.card h3 {
+  margin-top: 20px;
+  text-align: center;
+  color: #444;
+}
+
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+.form-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.form-inline input,
+.form-inline select,
+.form-inline button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.form-inline button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.form-inline button:hover {
+  background-color: #0056b3;
+}

@@ -13,6 +13,11 @@ header h1 a {
     text-decoration: none;
 }
 
+header h4 a {
+    color: rgb(98, 103, 136);
+    text-decoration: none !important;
+}
+
 .nav-left {
     margin-right: auto;
 }
