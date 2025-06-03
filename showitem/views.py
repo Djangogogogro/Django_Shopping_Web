@@ -28,13 +28,22 @@ def product_detail(request, product_id):
 
 
 def product_list(request):
+    query = request.GET.get('q', '')
     categories = Category.objects.all()
+    
+    if query:
+        all_products = Product.objects.filter(name__icontains=query)
+    else:
+        all_products = Product.objects.all()
+
     products_by_category = {
         category.id: Product.objects.filter(category=category)
         for category in categories
     }
+
     return render(request, 'product_list.html', {
         'categories': categories,
+        'all_products': all_products,
         'products_by_category': products_by_category
     })
 

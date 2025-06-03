@@ -59,3 +59,33 @@
 .item a:hover{
     text-decoration: underline;
 }
+
+#search-form {
+  position: absolute;
+  top: 80px;
+  left: 55%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+  background-color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+#search-form input[type="text"] {
+  padding: 8px;
+  width: 600px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+#search-form button {
+  padding: 8px 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 4px;
+  cursor: pointer;
+}
+#search-form button:hover {
+  background-color: #0056b3;
+}
