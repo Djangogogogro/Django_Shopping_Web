@@ -5,5 +5,5 @@ SELLER ACCOUNTS :
 Email : ecommerce@example.com  
 Password : ecommerce  
 CUSTOMER ACCOUNTS :  
-Email : ?  
-Password : ?
+Email : a@gmail.com  
+Password : a
